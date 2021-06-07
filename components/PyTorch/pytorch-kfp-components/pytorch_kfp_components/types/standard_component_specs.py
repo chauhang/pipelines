@@ -1,4 +1,5 @@
 #!/usr/bin/env/python3
+<<<<<<< HEAD
 #
 # Copyright (c) Facebook, Inc. and its affiliates.
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,7 +57,6 @@ MINIO_SOURCE = "source"
 MINIO_BUCKET_NAME = "bucket_name"
 MINIO_DESTINATION = "destination"
 MINIO_ENDPOINT = "endpoint"
-
 
 class Parameters:  # pylint: disable=R0903
     """Parameter class to match the desired type."""
