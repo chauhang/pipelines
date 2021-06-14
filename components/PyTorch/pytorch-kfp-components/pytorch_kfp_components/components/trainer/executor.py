@@ -108,8 +108,13 @@ class Executor(GenericExecutor):
 
             model_save_path = os.path.join(model_save_path, model_name)
             if trainer.global_rank == 0:
+                import datetime
+                a = datetime.datetime.now()
                 print("Saving model to {}".format(model_save_path))
                 torch.save(model.state_dict(), model_save_path)
+                print("\n\n")
+                print("Time to save the model",datetime.datetime.now() - a)
+                print("\n\n")
 
             output_dict[standard_component_specs.TRAINER_MODEL_SAVE_PATH
                        ] = model_save_path
