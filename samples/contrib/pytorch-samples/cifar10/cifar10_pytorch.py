@@ -97,14 +97,14 @@ tboard = TensorBoardLogger(args["tensorboard_root"])
 early_stopping = EarlyStopping(
     monitor="val_loss", mode="min", patience=5, verbose=True
 )
-checkpoint_callback = ModelCheckpoint(
-    dirpath=args["checkpoint_dir"],
-    filename="cifar10_{epoch:02d}",
-    save_top_k=1,
-    verbose=True,
-    monitor="val_loss",
-    mode="min",
-)
+# checkpoint_callback = ModelCheckpoint(
+#     dirpath=args["checkpoint_dir"],
+#     filename="cifar10_{epoch:02d}",
+#     save_top_k=1,
+#     verbose=True,
+#     monitor="val_loss",
+#     mode="min",
+# )
 
 if not args["max_epochs"]:
     args["max_epochs"] = 1
@@ -115,8 +115,8 @@ if args["accelerator"] and args["accelerator"] == "None":
 # Setting the trainer specific arguments
 trainer_args = {
     "logger": tboard,
-    "checkpoint_callback": True,
-    "callbacks": [lr_logger, early_stopping, checkpoint_callback],
+#    "checkpoint_callback": True,
+    "callbacks": [lr_logger, early_stopping],
 }
 
 if "profiler" in args and args["profiler"] != "":
@@ -233,4 +233,4 @@ if trainer.ptl_trainer.global_rank == 0:
     print("time for visualization", g-f)
     checpoint_dir_contents = os.listdir(args["checkpoint_dir"])
     print(f"Checkpoint Directory Contents: {checpoint_dir_contents}")
-    print("Time after checkpoint save",g-datetime.datetime.now())
+    print("Time after checkpoint save",datetime.datetime.now()-g)
