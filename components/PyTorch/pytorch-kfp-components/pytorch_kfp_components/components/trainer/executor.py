@@ -88,7 +88,8 @@ class Executor(GenericExecutor):
 
             if not isinstance(trainer_args, dict):
                 raise TypeError("trainer_args must be a dict")
-
+            import datetime
+            a = datetime.datetime.now()
             trainer_args.update(module_file_args)
             parser = Namespace(**trainer_args)
             trainer = pl.Trainer.from_argparse_args(parser)
@@ -108,9 +109,12 @@ class Executor(GenericExecutor):
 
             model_save_path = os.path.join(model_save_path, model_name)
             if trainer.global_rank == 0:
+                import datetime
+                a = datetime.datetime.now()
                 print("Saving model to {}".format(model_save_path))
+                print("\n\n")
                 torch.save(model.state_dict(), model_save_path)
-
+                print("Time taken for saving this model", datetime.datetime.now() - a)
             output_dict[standard_component_specs.TRAINER_MODEL_SAVE_PATH
                        ] = model_save_path
             output_dict[standard_component_specs.PTL_TRAINER_OBJ] = trainer

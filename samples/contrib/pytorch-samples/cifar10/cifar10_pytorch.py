@@ -114,8 +114,7 @@ if args["accelerator"] and args["accelerator"] == "None":
 # Setting the trainer specific arguments
 trainer_args = {
     "logger": tboard,
-    "checkpoint_callback": True,
-    "callbacks": [lr_logger, early_stopping, checkpoint_callback],
+    "callbacks": [lr_logger, early_stopping],
 }
 
 if "profiler" in args and args["profiler"] != "":
@@ -127,7 +126,8 @@ data_module_args = {"train_glob": args["dataset_path"]}
 # Creating parent directories
 Path(args["tensorboard_root"]).mkdir(parents=True, exist_ok=True)
 Path(args["checkpoint_dir"]).mkdir(parents=True, exist_ok=True)
-
+a = datetime.datetime.now()
+print(a)
 # Initiating the training process
 trainer = Trainer(
     module_file="cifar10_train.py",
@@ -136,9 +136,11 @@ trainer = Trainer(
     data_module_args=data_module_args,
     trainer_args=trainer_args,
 )
-
+b = datetime.datetime.now()
+print("training time", b-a)
 model = trainer.ptl_trainer.get_model()
-
+c = datetime.datetime.now()
+print("Time before mar",c)
 if trainer.ptl_trainer.global_rank == 0:
     # Mar file generation
 
@@ -162,7 +164,8 @@ if trainer.ptl_trainer.global_rank == 0:
     }
 
     MarGeneration(mar_config=mar_config, mar_save_path=args["checkpoint_dir"])
-
+    d = datetime.datetime.now()
+    print("Mar Generation Time",d-c)
     classes = [
         "airplane",
         "automobile",
@@ -213,6 +216,8 @@ if trainer.ptl_trainer.global_rank == 0:
     markdown_dict = {"storage": "inline", "source": visualization_arguments}
 
     print("Visualization Arguments: ", markdown_dict)
+    f = datetime.datetime.now()
+    print("Time before visualization", f)
 
     visualization = Visualization(
         test_accuracy=test_accuracy,
@@ -221,6 +226,8 @@ if trainer.ptl_trainer.global_rank == 0:
         mlpipeline_metrics=args["mlpipeline_metrics"],
         markdown=markdown_dict,
     )
+    g = datetime.datetime.now()
+    print("time for visualization", g - f)s
 
     checpoint_dir_contents = os.listdir(args["checkpoint_dir"])
     print(f"Checkpoint Directory Contents: {checpoint_dir_contents}")
