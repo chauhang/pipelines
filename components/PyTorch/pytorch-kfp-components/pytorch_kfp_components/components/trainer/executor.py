@@ -95,7 +95,10 @@ class Executor(GenericExecutor):
             trainer = pl.Trainer.from_argparse_args(parser)
 
             trainer.fit(model, data_module)
+            print("Time taken to fit",datetime.datetime.now()-a)
+            b = datetime.datetime.now()
             trainer.test()
+            print("Time taken to test", datetime.datetime.now()-b)
 
             if "checkpoint_dir" in module_file_args:
                 model_save_path = module_file_args["checkpoint_dir"]
@@ -110,11 +113,11 @@ class Executor(GenericExecutor):
             model_save_path = os.path.join(model_save_path, model_name)
             if trainer.global_rank == 0:
                 import datetime
-                a = datetime.datetime.now()
+                d = datetime.datetime.now()
                 print("Saving model to {}".format(model_save_path))
                 print("\n\n")
                 torch.save(model.state_dict(), model_save_path)
-                print("Time taken for saving this model", datetime.datetime.now() - a)
+                print("Time taken for saving this model", datetime.datetime.now() - d)
             output_dict[standard_component_specs.TRAINER_MODEL_SAVE_PATH
                        ] = model_save_path
             output_dict[standard_component_specs.PTL_TRAINER_OBJ] = trainer
