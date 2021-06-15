@@ -119,8 +119,8 @@ trainer_args = {
     "callbacks": [lr_logger, early_stopping],
 }
 
-if "profiler" in args and args["profiler"] != "":
-    trainer_args["profiler"] = args["profiler"]
+# if "profiler" in args and args["profiler"] != "":
+#     trainer_args["profiler"] = args["profiler"]
 
 # Setting the datamodule specific arguments
 data_module_args = {"train_glob": args["dataset_path"]}
@@ -140,7 +140,7 @@ trainer = Trainer(
 )
 b = datetime.datetime.now()
 print("training time", b-a)
-#model = trainer.ptl_trainer.get_model()
+model = trainer.ptl_trainer.get_model()
 c = datetime.datetime.now()
 print("Time before mar",c)
 if trainer.ptl_trainer.global_rank == 0:
@@ -169,38 +169,38 @@ if trainer.ptl_trainer.global_rank == 0:
     d = datetime.datetime.now()
     print("Mar Generation Time",d-c)
 
-    # classes = [
-    #     "airplane",
-    #     "automobile",
-    #     "bird",
-    #     "cat",
-    #     "deer",
-    #     "dog",
-    #     "frog",
-    #     "horse",
-    #     "ship",
-    #     "truck",
-    # ]
-    #
-    # # print(dir(trainer.ptl_trainer.model.module))
-    # # model = trainer.ptl_trainer.model
-    #
-    # target_index_list = list(set(model.target))
-    #
-    # class_list = []
-    # for index in target_index_list:
-    #     class_list.append(classes[index])
-    #
-    # confusion_matrix_dict = {
-    #     "actuals": model.target,
-    #     "preds": model.preds,
-    #     "classes": class_list,
-    #     "url": args["confusion_matrix_url"],
-    # }
-    #
-    # test_accuracy = round(float(model.test_acc.compute()), 2)
-    #
-    # print("Model test accuracy: ", test_accuracy)
+    classes = [
+        "airplane",
+        "automobile",
+        "bird",
+        "cat",
+        "deer",
+        "dog",
+        "frog",
+        "horse",
+        "ship",
+        "truck",
+    ]
+
+    # print(dir(trainer.ptl_trainer.model.module))
+    # model = trainer.ptl_trainer.model
+
+    target_index_list = list(set(model.target))
+
+    class_list = []
+    for index in target_index_list:
+        class_list.append(classes[index])
+
+    confusion_matrix_dict = {
+        "actuals": model.target,
+        "preds": model.preds,
+        "classes": class_list,
+        "url": args["confusion_matrix_url"],
+    }
+
+    test_accuracy = round(float(model.test_acc.compute()), 2)
+
+    print("Model test accuracy: ", test_accuracy)
 
     visualization_arguments = {
         "input": {

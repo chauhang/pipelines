@@ -1,5 +1,5 @@
 boto3
-pytorch-lightning==1.2.7
+pytorch-lightning
 image
 matplotlib
 torch
