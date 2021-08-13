@@ -1,7 +1,7 @@
 boto3
 image
 matplotlib
-torch
+torch>=1.9.0
 pyarrow
 sklearn
 transformers
@@ -12,7 +12,9 @@ pandas
 numpy
 s3fs
 wget
-torch-model-archiver
+torch-model-archiver>=0.4.0
 minio
-kfp
-torchserve
+kfp>=1.7.0
+torchserve>=0.4.0
+tensorboard>=2.6.0
+
