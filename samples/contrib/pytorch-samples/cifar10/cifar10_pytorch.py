@@ -133,11 +133,39 @@ checkpoint_callback = ModelCheckpoint(
 if "accelerator" in ptl_dict and ptl_dict["accelerator"] == "None":
     ptl_dict["accelerator"] = None
 
+deepspeed_config = {
+    "zero_allow_untested_optimizer": True,
+    "optimizer": {
+    "type": "Adam",
+    "params": {
+      "lr": 0.001,
+      "betas": [
+        0.8,
+        0.999
+      ],
+      "eps": 1e-8,
+      "weight_decay": 3e-7
+    }
+  },
+    "scheduler": {
+        "type": "WarmupLR",
+        "params": {
+            "last_batch_iteration": -1,
+            "warmup_min_lr": 0,
+            "warmup_max_lr": 3e-5,
+            "warmup_num_steps": 100,
+        },
+    },
+}
+
 # Setting the trainer specific arguments
+from pytorch_lightning.plugins import DeepSpeedPlugin
 trainer_args = {
     "logger": tboard,
     "checkpoint_callback": True,
     "callbacks": [lr_logger, early_stopping, checkpoint_callback],
+    "plugins": DeepSpeedPlugin(stage=1, config=deepspeed_config),
+    "precision": 16
 }
 
 if not ptl_dict["max_epochs"]:
@@ -162,6 +190,8 @@ trainer_args.update(ptl_dict)
 if "model_params" in args and args["model_params"] is not None:
     args.update(json.loads(args["model_params"]))
 
+import time
+start_time = time.time()
 # Initiating the training process
 trainer = Trainer(
     module_file="cifar10_train.py",
@@ -170,6 +200,10 @@ trainer = Trainer(
     data_module_args=data_module_args,
     trainer_args=trainer_args,
 )
+
+total_time_taken = time.time() - start_time
+
+print("\n\n\n\n Total time taken for training : {} \n\n\n\n".format(total_time_taken))
 
 model = trainer.ptl_trainer.lightning_module
 

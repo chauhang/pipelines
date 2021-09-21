@@ -146,6 +146,7 @@ class CIFAR10Classifier(pl.LightningModule):  #pylint: disable=too-many-ancestor
                 ),
             "monitor":
                 "val_loss",
+            "metrics": 0
         }
         return [self.optimizer], [self.scheduler]
 

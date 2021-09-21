@@ -89,21 +89,21 @@ class CIFAR10DataModule(pl.LightningDataModule):  # pylint: disable=too-many-ins
             handler=wds.warn_and_continue).shuffle(100).decode("pil").rename(
                 image="ppm;jpg;jpeg;png",
                 info="cls").map_dict(image=self.train_transform).to_tuple(
-                    "image", "info").batched(40))
+                    "image", "info"))
 
         self.valid_dataset = (wds.WebDataset(
             valid_url,
             handler=wds.warn_and_continue).shuffle(100).decode("pil").rename(
                 image="ppm",
                 info="cls").map_dict(image=self.valid_transform).to_tuple(
-                    "image", "info").batched(20))
+                    "image", "info"))
 
         self.test_dataset = (wds.WebDataset(
             test_url,
             handler=wds.warn_and_continue).shuffle(100).decode("pil").rename(
                 image="ppm",
                 info="cls").map_dict(image=self.valid_transform).to_tuple(
-                    "image", "info").batched(20))
+                    "image", "info"))
 
     def create_data_loader(self, dataset, batch_size, num_workers):  # pylint: disable=no-self-use
         """Creates data loader."""
@@ -118,7 +118,7 @@ class CIFAR10DataModule(pl.LightningDataModule):  # pylint: disable=too-many-ins
         """
         self.train_data_loader = self.create_data_loader(
             self.train_dataset,
-            self.args.get("train_batch_size", None),
+            self.args.get("train_batch_size", 40),
             self.args.get("train_num_workers", 4),
         )
         return self.train_data_loader
@@ -130,7 +130,7 @@ class CIFAR10DataModule(pl.LightningDataModule):  # pylint: disable=too-many-ins
         """
         self.val_data_loader = self.create_data_loader(
             self.valid_dataset,
-            self.args.get("val_batch_size", None),
+            self.args.get("val_batch_size", 20),
             self.args.get("val_num_workers", 4),
         )
         return self.val_data_loader
@@ -142,7 +142,7 @@ class CIFAR10DataModule(pl.LightningDataModule):  # pylint: disable=too-many-ins
         """
         self.test_data_loader = self.create_data_loader(
             self.test_dataset,
-            self.args.get("val_batch_size", None),
+            self.args.get("val_batch_size", 20),
             self.args.get("val_num_workers", 4),
         )
         return self.test_data_loader
